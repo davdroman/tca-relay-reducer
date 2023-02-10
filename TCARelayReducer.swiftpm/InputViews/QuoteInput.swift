@@ -34,7 +34,7 @@ struct QuoteInputView: View {
 		let canContinue: Bool
 
 		init(state: QuoteInput.State) {
-			self.prompt = "Enter your favorite movie quote\n\(state.minimumLength) characters min."
+			self.prompt = "Enter your favorite movie quote\n\n\(state.minimumLength) characters min."
 			self.output = state.output
 			self.canContinue = state.output.count >= state.minimumLength
 		}

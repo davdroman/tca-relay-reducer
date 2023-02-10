@@ -29,6 +29,10 @@ struct Main: ReducerProtocol {
 				state.p2pRequestFlow = .init(requestPack: requestPack)
 				return .none
 
+			case .p2pRequestFlow(.dismiss):
+				state.p2pRequestFlow = nil
+				return .none
+
 			case .p2pRequestFlow:
 				return .none
 			}

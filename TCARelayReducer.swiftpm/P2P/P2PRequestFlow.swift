@@ -1,6 +1,7 @@
 import ComposableArchitecture
 import NavigationTransitions
 import NonEmpty
+import OrderedCollections
 import SwiftUI
 
 struct P2PRequestFlow: ReducerProtocol {
@@ -11,7 +12,7 @@ struct P2PRequestFlow: ReducerProtocol {
 		@NavigationStateOf<Destinations>
 		var path
 
-		var responses: [P2PRequest: P2PResponse] = [:]
+		var responses: OrderedDictionary<P2PRequest, P2PResponse> = [:]
 
 		init(requestPack: P2PRequestPack) {
 			self.requests = requestPack.requests
@@ -22,6 +23,7 @@ struct P2PRequestFlow: ReducerProtocol {
 	enum Action: Equatable {
 		case root(Destinations.Action)
 		case path(NavigationActionOf<Destinations>)
+		case dismiss
 	}
 
 	struct Destinations: ReducerProtocol {
@@ -58,27 +60,46 @@ struct P2PRequestFlow: ReducerProtocol {
 	var body: some ReducerProtocolOf<Self> {
 		Reduce<State, Action> { state, action in
 			switch action {
+			case .path(.dismiss):
+				state.responses.removeLast()
+				return .none
 			case
 				let .root(.relay(request, .nameInput(.continueButtonTapped(output: name)))),
 				let .path(.element(_, .relay(request, .nameInput(.continueButtonTapped(output: name))))):
 				state.responses[request] = .name(.init(id: request.id, name: name))
-				return .none
+				return continueEffect(for: &state)
 			case
 				let .root(.relay(request, .quoteInput(.continueButtonTapped(output: quote)))),
 				let .path(.element(_, .relay(request, .quoteInput(.continueButtonTapped(output: quote))))):
 				state.responses[request] = .quote(.init(id: request.id, quote: quote))
-				return .none
+				return continueEffect(for: &state)
 			case
 				let .root(.relay(request, .numberInput(.continueButtonTapped(output: number)))),
 				let .path(.element(_, .relay(request, .numberInput(.continueButtonTapped(output: number))))):
 				state.responses[request] = .number(.init(id: request.id, number: number))
-				return .none
+				return continueEffect(for: &state)
 			default:
 				return .none
 			}
 		}
 		.navigationDestination(\.$path, action: /Action.path) {
 			Destinations()
+		}
+	}
+
+	func continueEffect(for state: inout State) -> EffectTask<Action> {
+		if let nextRequest = state.requests.first(where: { state.responses[$0] == nil }) {
+			let nextDestination = Destinations.State(for: nextRequest)
+			if state.path.last != nextDestination {
+				state.path.append(nextDestination)
+			}
+			return .none
+		} else {
+			return .run { [responses = state.responses.values] send in
+				@Dependency(\.p2pClient) var p2pClient: P2PClient
+				await p2pClient.sendResponse(P2PResponsePack(responses: Array(responses)))
+				await send(.dismiss)
+			}
 		}
 	}
 }
