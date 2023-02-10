@@ -65,6 +65,7 @@ struct NameInputView: View {
 			}
 			.padding()
 		}
+		.navigationTitle("Name")
 	}
 }
 

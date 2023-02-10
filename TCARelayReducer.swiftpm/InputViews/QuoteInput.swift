@@ -67,6 +67,7 @@ struct QuoteInputView: View {
 			}
 			.padding()
 		}
+		.navigationTitle("Quote")
 	}
 }
 

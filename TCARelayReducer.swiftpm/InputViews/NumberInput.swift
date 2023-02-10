@@ -71,6 +71,7 @@ struct NumberInputView: View {
 			}
 			.padding()
 		}
+		.navigationTitle("Number")
 	}
 }
 

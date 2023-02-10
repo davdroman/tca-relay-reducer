@@ -53,8 +53,8 @@ struct MainView: View {
 					await P2PClient.requestChannel.send(.init(
 						requests: .init(
 							.name(.init(id: UUID(), metadata: P2PMetadata(), validCharacters: .letters)),
-							.quote(.init(id: UUID(), metadata: P2PMetadata(), minimumLength: .random(in: 0..<15))),
-							.number(.init(id: UUID(), metadata: P2PMetadata(), validNumbers: 1...10))
+							.quote(.init(id: UUID(), metadata: P2PMetadata(), minimumLength: .random(in: 1..<15))),
+							.number(.init(id: UUID(), metadata: P2PMetadata(), validNumbers: 1...1000))
 						)
 						.shuffled()
 					))
