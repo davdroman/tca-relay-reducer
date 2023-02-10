@@ -8,7 +8,9 @@ struct MyApp: App {
 					store: .init(
 						initialState: .init(),
 						reducer: Main()
-					)
+					) {
+						$0.context = .preview
+					}
 				)
         }
     }

@@ -8,7 +8,7 @@ struct P2PRequestFlow: ReducerProtocol {
 	struct State: Hashable {
 		let requests: NonEmpty<[P2PRequest]>
 
-		let root: Destinations.State
+		var root: Destinations.State
 		@NavigationStateOf<Destinations>
 		var path
 
@@ -58,6 +58,13 @@ struct P2PRequestFlow: ReducerProtocol {
 	}
 
 	var body: some ReducerProtocolOf<Self> {
+		Scope(state: \.root, action: /Action.root) {
+			Destinations()
+		}
+		.navigationDestination(\.$path, action: /Action.path) {
+			Destinations()
+		}
+
 		Reduce<State, Action> { state, action in
 			switch action {
 			case .path(.dismiss):
@@ -81,9 +88,6 @@ struct P2PRequestFlow: ReducerProtocol {
 			default:
 				return .none
 			}
-		}
-		.navigationDestination(\.$path, action: /Action.path) {
-			Destinations()
 		}
 	}
 
@@ -124,11 +128,20 @@ extension P2PRequestFlow.Destinations.State {
 }
 
 struct P2PRequestFlowView: View {
+	@Environment(\.dismiss) private var dismiss
+
 	let store: StoreOf<P2PRequestFlow>
 
 	var body: some View {
 		NavigationStackStore(store.scope(state: \.$path, action: { .path($0) })) {
 			view(for: store.scope(state: \.root, action: { .root($0) }))
+				.toolbar {
+					ToolbarItem(placement: .navigationBarLeading) {
+						Button(action: { dismiss() }) {
+							Image(systemName: "xmark").fontWeight(.semibold)
+						}
+					}
+				}
 				.navigationDestination(
 					store: store.scope(state: \.$path, action: { .path($0) }),
 					destination: view(for:)
