@@ -3,19 +3,20 @@ import SwiftUI
 
 struct Main: ReducerProtocol {
 	struct State: Hashable {
-		@PresentationState var p2pRequestFlow: Flow.State?
+		@PresentationState
+		var p2pRequestFlow: P2PRequestFlow.State?
 	}
 
 	enum Action: Equatable {
 		case task
 		case p2pRequestReceived(P2PRequestPack)
-		case p2pRequestFlow(PresentationActionOf<Flow>)
+		case p2pRequestFlow(PresentationActionOf<P2PRequestFlow>)
 	}
 
 	@Dependency(\.p2pClient) var p2pClient
 
 	var body: some ReducerProtocolOf<Self> {
-		Reduce { state, action in
+		Reduce<State, Action> { state, action in
 			switch action {
 			case .task:
 				return .run { send in
@@ -27,13 +28,13 @@ struct Main: ReducerProtocol {
 			case .p2pRequestReceived(let requestPack):
 				state.p2pRequestFlow = .init(requestPack: requestPack)
 				return .none
-				
+
 			case .p2pRequestFlow:
 				return .none
 			}
 		}
 		.presentationDestination(\.$p2pRequestFlow, action: /Action.p2pRequestFlow) {
-			Flow()
+			P2PRequestFlow()
 		}
 	}
 }
@@ -46,11 +47,12 @@ struct MainView: View {
 			Button("Simulate incoming P2P request") {
 				Task {
 					await P2PClient.requestChannel.send(.init(
-						requests: [
+						requests: .init(
 							.name(.init(id: UUID(), metadata: P2PMetadata(), validCharacters: .letters)),
 							.quote(.init(id: UUID(), metadata: P2PMetadata(), minimumLength: .random(in: 0..<15))),
 							.number(.init(id: UUID(), metadata: P2PMetadata(), validNumbers: 1...10))
-						]
+						)
+						.shuffled()
 					))
 				}
 			}
@@ -60,7 +62,7 @@ struct MainView: View {
 				state: \.$p2pRequestFlow,
 				action: { .p2pRequestFlow($0) }
 			),
-			content: FlowView.init(store:)
+			content: P2PRequestFlowView.init(store:)
 		)
 		.task {
 			await ViewStore(store).send(.task).finish()
