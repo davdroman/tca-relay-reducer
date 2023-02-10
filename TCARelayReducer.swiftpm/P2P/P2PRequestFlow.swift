@@ -68,6 +68,8 @@ struct P2PRequestFlow: ReducerProtocol {
 		Reduce<State, Action> { state, action in
 			switch action {
 			case .path(.dismiss):
+				// FIXME: .path(.dismiss) doesn't get called when system "< Back" button is tapped on any of the path views...
+				// maybe I'm using this wrong, but it doesn't really matter for the purposes of this showcase
 				state.responses.removeLast()
 				return .none
 			case
