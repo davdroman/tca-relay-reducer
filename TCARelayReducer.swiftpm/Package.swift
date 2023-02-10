@@ -34,13 +34,17 @@ let package = Package(
         )
     ],
     dependencies: [
-        .package(url: "https://github.com/davdroman/swift-composable-architecture", branch: "scope-local-state-action")
+        .package(url: "https://github.com/davdroman/swift-composable-architecture", .branch("scope-local-state-action")),
+        .package(url: "https://github.com/davdroman/swiftui-navigation-transitions", "0.7.2"..<"1.0.0"),
+        .package(url: "https://github.com/apple/swift-async-algorithms", "0.0.4"..<"1.0.0")
     ],
     targets: [
         .executableTarget(
             name: "AppModule",
             dependencies: [
-                .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                .product(name: "NavigationTransitions", package: "swiftui-navigation-transitions"),
+                .product(name: "AsyncAlgorithms", package: "swift-async-algorithms")
             ],
             path: "."
         )
