@@ -49,15 +49,32 @@ struct NumberInputView: View {
 					format: .number,
 					prompt: Text("Enter a number you like...")
 				)
+				.textFieldStyle(.roundedBorder)
+				.padding()
 			}
 			.safeAreaInset(edge: .bottom, spacing: 0) {
-				Button("Continue", action: { viewStore.send(.continueButtonTapped(output: viewStore.output)) })
-					.buttonStyle(.borderedProminent)
+				Button(
+					action: { viewStore.send(.continueButtonTapped(output: viewStore.output)) }
+				) {
+					Text("Continue")
+						.bold()
+						.frame(maxWidth: .infinity)
+						.frame(height: 40)
+				}
+				.buttonStyle(.borderedProminent)
+				.padding()
 			}
 		}
 	}
 }
 
-//struct NumberInputView_Previews: PreviewProvider {
-//
-//}
+struct NumberInputView_Previews: PreviewProvider {
+	static var previews: some View {
+		NumberInputView(
+			store: .init(
+				initialState: .init(validNumbers: 0...5),
+				reducer: NumberInput()
+			)
+		)
+	}
+}

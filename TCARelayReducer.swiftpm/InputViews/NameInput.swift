@@ -48,11 +48,32 @@ struct NameInputView: View {
 					text: viewStore.binding(get: \.output, send: { .nameFieldChanged($0) }),
 					prompt: Text("Enter your name...")
 				)
+				.textFieldStyle(.roundedBorder)
+				.padding()
 			}
 			.safeAreaInset(edge: .bottom, spacing: 0) {
-				Button("Continue", action: { viewStore.send(.continueButtonTapped(output: viewStore.output)) })
-					.buttonStyle(.borderedProminent)
+				Button(
+					action: { viewStore.send(.continueButtonTapped(output: viewStore.output)) }
+				) {
+					Text("Continue")
+						.bold()
+						.frame(maxWidth: .infinity)
+						.frame(height: 40)
+				}
+				.buttonStyle(.borderedProminent)
+				.padding()
 			}
 		}
+	}
+}
+
+struct NameInputView_Previews: PreviewProvider {
+	static var previews: some View {
+		NameInputView(
+			store: .init(
+				initialState: .init(validCharacters: .letters),
+				reducer: NameInput()
+			)
+		)
 	}
 }
