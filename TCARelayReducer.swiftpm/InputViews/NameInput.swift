@@ -29,10 +29,12 @@ struct NameInput: ReducerProtocol {
 
 struct NameInputView: View {
 	struct ViewState: Equatable {
+		let prompt: String
 		let output: String
 		let canContinue: Bool
 
 		init(state: NameInput.State) {
+			self.prompt = "Enter your name (letters only)"
 			self.output = state.output
 			self.canContinue = state.output.rangeOfCharacter(from: state.validCharacters) == state.output.startIndex..<state.output.endIndex
 		}
@@ -46,10 +48,9 @@ struct NameInputView: View {
 				TextField(
 					"Name",
 					text: viewStore.binding(get: \.output, send: { .nameFieldChanged($0) }),
-					prompt: Text("Enter your name...")
+					prompt: Text(viewStore.prompt)
 				)
 				.textFieldStyle(.roundedBorder)
-				.padding()
 			}
 			.safeAreaInset(edge: .bottom, spacing: 0) {
 				Button(
@@ -61,8 +62,8 @@ struct NameInputView: View {
 						.frame(height: 40)
 				}
 				.buttonStyle(.borderedProminent)
-				.padding()
 			}
+			.padding()
 		}
 	}
 }

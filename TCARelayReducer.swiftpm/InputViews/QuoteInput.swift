@@ -29,10 +29,12 @@ struct QuoteInput: ReducerProtocol {
 
 struct QuoteInputView: View {
 	struct ViewState: Equatable {
+		let prompt: String
 		let output: String
 		let canContinue: Bool
 
 		init(state: QuoteInput.State) {
+			self.prompt = "Enter your favorite movie quote\n\(state.minimumLength) characters min."
 			self.output = state.output
 			self.canContinue = state.output.count >= state.minimumLength
 		}
@@ -46,10 +48,11 @@ struct QuoteInputView: View {
 				TextField(
 					"Quote",
 					text: viewStore.binding(get: \.output, send: { .quoteFieldChanged($0) }),
-					prompt: Text("Enter your favorite movie quote...")
+					prompt: Text(viewStore.prompt),
+					axis: .vertical
 				)
+				.lineLimit(4, reservesSpace: true)
 				.textFieldStyle(.roundedBorder)
-				.padding()
 			}
 			.safeAreaInset(edge: .bottom, spacing: 0) {
 				Button(
@@ -61,8 +64,8 @@ struct QuoteInputView: View {
 						.frame(height: 40)
 				}
 				.buttonStyle(.borderedProminent)
-				.padding()
 			}
+			.padding()
 		}
 	}
 }

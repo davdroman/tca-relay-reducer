@@ -4,7 +4,7 @@ import SwiftUI
 struct NumberInput: ReducerProtocol {
 	struct State: Hashable {
 		let validNumbers: ClosedRange<Int>
-		var output: Int = 0
+		var output: Int? = nil
 
 		init(validNumbers: ClosedRange<Int>) {
 			self.validNumbers = validNumbers
@@ -12,7 +12,7 @@ struct NumberInput: ReducerProtocol {
 	}
 
 	enum Action: Equatable {
-		case numberFieldChanged(Int)
+		case numberFieldChanged(Int?)
 		case continueButtonTapped(output: Int)
 	}
 
@@ -29,12 +29,18 @@ struct NumberInput: ReducerProtocol {
 
 struct NumberInputView: View {
 	struct ViewState: Equatable {
-		let output: Int
+		let prompt: String
+		let output: Int?
 		let canContinue: Bool
 
 		init(state: NumberInput.State) {
+			self.prompt = "Enter a number from \(state.validNumbers.lowerBound) to \(state.validNumbers.upperBound)"
 			self.output = state.output
-			self.canContinue = state.validNumbers.contains(state.output)
+			if let output = state.output {
+				self.canContinue = state.validNumbers.contains(output)
+			} else {
+				self.canContinue = false
+			}
 		}
 	}
 
@@ -47,14 +53,13 @@ struct NumberInputView: View {
 					"Number",
 					value: viewStore.binding(get: \.output, send: { .numberFieldChanged($0) }),
 					format: .number,
-					prompt: Text("Enter a number you like...")
+					prompt: Text(viewStore.prompt)
 				)
 				.textFieldStyle(.roundedBorder)
-				.padding()
 			}
 			.safeAreaInset(edge: .bottom, spacing: 0) {
 				Button(
-					action: { viewStore.send(.continueButtonTapped(output: viewStore.output)) }
+					action: { viewStore.send(.continueButtonTapped(output: viewStore.output!)) }
 				) {
 					Text("Continue")
 						.bold()
@@ -62,8 +67,9 @@ struct NumberInputView: View {
 						.frame(height: 40)
 				}
 				.buttonStyle(.borderedProminent)
-				.padding()
+				.disabled(!viewStore.canContinue)
 			}
+			.padding()
 		}
 	}
 }
@@ -72,7 +78,7 @@ struct NumberInputView_Previews: PreviewProvider {
 	static var previews: some View {
 		NumberInputView(
 			store: .init(
-				initialState: .init(validNumbers: 0...5),
+				initialState: .init(validNumbers: 1...5),
 				reducer: NumberInput()
 			)
 		)
