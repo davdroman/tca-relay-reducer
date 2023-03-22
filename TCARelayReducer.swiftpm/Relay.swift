@@ -1,4 +1,4 @@
-import ComposableArchitecture
+@_spi(Internals) import ComposableArchitecture
 
 public struct RelayState<RelayedState, MainState> {
 	public let relayedState: RelayedState

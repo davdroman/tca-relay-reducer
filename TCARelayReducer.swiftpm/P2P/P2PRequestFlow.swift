@@ -9,8 +9,7 @@ struct P2PRequestFlow: ReducerProtocol {
 		let requests: NonEmpty<[P2PRequest]>
 
 		var root: Destinations.State
-		@NavigationStateOf<Destinations>
-		var path
+		var path: StackState<Destinations.State> = []
 
 		var responses: OrderedDictionary<P2PRequest, P2PResponse> = [:]
 
@@ -22,7 +21,7 @@ struct P2PRequestFlow: ReducerProtocol {
 
 	enum Action: Equatable {
 		case root(Destinations.Action)
-		case path(NavigationActionOf<Destinations>)
+		case path(StackAction<Destinations.Action>)
 		case dismiss
 	}
 
@@ -61,15 +60,13 @@ struct P2PRequestFlow: ReducerProtocol {
 		Scope(state: \.root, action: /Action.root) {
 			Destinations()
 		}
-		.navigationDestination(\.$path, action: /Action.path) {
+		.forEach(\.path, action: /Action.path) {
 			Destinations()
 		}
 
 		Reduce<State, Action> { state, action in
 			switch action {
-			case .path(.dismiss):
-				// FIXME: .path(.dismiss) doesn't get called when system "< Back" button is tapped on any of the path views...
-				// maybe I'm using this wrong, but it doesn't really matter for the purposes of this showcase
+			case .path(.popFrom):
 				state.responses.removeLast()
 				return .none
 			case
@@ -135,7 +132,7 @@ struct P2PRequestFlowView: View {
 	let store: StoreOf<P2PRequestFlow>
 
 	var body: some View {
-		NavigationStackStore(store.scope(state: \.$path, action: { .path($0) })) {
+		NavigationStackStore(store.scope(state: \.path, action: { .path($0) })) {
 			view(for: store.scope(state: \.root, action: { .root($0) }))
 				.toolbar {
 					ToolbarItem(placement: .navigationBarLeading) {
@@ -144,10 +141,8 @@ struct P2PRequestFlowView: View {
 						}
 					}
 				}
-				.navigationDestination(
-					store: store.scope(state: \.$path, action: { .path($0) }),
-					destination: view(for:)
-				)
+		} destination: { store in
+			view(for: store)
 		}
 		.navigationTransition(.slide)
 	}

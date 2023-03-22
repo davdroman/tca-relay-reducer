@@ -10,7 +10,7 @@ struct Main: ReducerProtocol {
 	enum Action: Equatable {
 		case task
 		case p2pRequestReceived(P2PRequestPack)
-		case p2pRequestFlow(PresentationActionOf<P2PRequestFlow>)
+		case p2pRequestFlow(PresentationAction<P2PRequestFlow.Action>)
 	}
 
 	@Dependency(\.p2pClient) var p2pClient
@@ -37,7 +37,7 @@ struct Main: ReducerProtocol {
 				return .none
 			}
 		}
-		.presentationDestination(\.$p2pRequestFlow, action: /Action.p2pRequestFlow) {
+		.ifLet(\.$p2pRequestFlow, action: /Action.p2pRequestFlow) {
 			P2PRequestFlow()
 		}
 	}
