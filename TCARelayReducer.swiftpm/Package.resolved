@@ -50,8 +50,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/radixdlt/swift-composable-architecture",
       "state" : {
-        "branch" : "navigation-stack-and-full-scope",
-        "revision" : "a823c7d3237769feb9f19e4f609de03ba80fca76"
+        "branch" : "navigation-stack-and-full-scope-2",
+        "revision" : "d6d3363a2f0739e52e04e5b0484f1e1702185d64"
       }
     },
     {
