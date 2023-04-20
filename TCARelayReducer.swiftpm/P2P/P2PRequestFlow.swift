@@ -9,7 +9,7 @@ struct P2PRequestFlow: ReducerProtocol {
 		let requests: NonEmpty<[P2PRequest]>
 
 		var root: Destinations.State
-		var path: StackState<Destinations.State> = []
+		var path = StackState<Destinations.State>()
 
 		var responses: OrderedDictionary<P2PRequest, P2PResponse> = [:]
 
@@ -21,7 +21,7 @@ struct P2PRequestFlow: ReducerProtocol {
 
 	enum Action: Equatable {
 		case root(Destinations.Action)
-		case path(StackAction<Destinations.Action>)
+		case path(StackAction<Destinations.State, Destinations.Action>)
 		case dismiss
 	}
 
