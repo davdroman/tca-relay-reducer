@@ -9,7 +9,7 @@ struct P2PClient {
 extension P2PClient: TestDependencyKey {
 	// in order to simulate incoming requests from a P2P client
 	static let requestChannel = AsyncChannel<P2PRequestPack>()
-
+	
 	static let testValue = Self(
 		requests: { requestChannel },
 		sendResponse: { response in

@@ -11,7 +11,7 @@ enum P2PRequest: Hashable {
 	case name(P2PNameRequest)
 	case quote(P2PQuoteRequest)
 	case number(P2PNumberRequest)
-
+	
 	var id: UUID {
 		switch self {
 		case .name(let request): return request.id

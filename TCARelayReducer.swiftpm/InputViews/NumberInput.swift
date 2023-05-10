@@ -5,17 +5,17 @@ struct NumberInput: ReducerProtocol {
 	struct State: Hashable {
 		let validNumbers: ClosedRange<Int>
 		var output: Int? = nil
-
+		
 		init(validNumbers: ClosedRange<Int>) {
 			self.validNumbers = validNumbers
 		}
 	}
-
+	
 	enum Action: Equatable {
 		case numberFieldChanged(Int?)
 		case continueButtonTapped(output: Int)
 	}
-
+	
 	func reduce(into state: inout State, action: Action) -> EffectTask<Action> {
 		switch action {
 		case .numberFieldChanged(let number):
@@ -32,7 +32,7 @@ struct NumberInputView: View {
 		let prompt: String
 		let output: Int?
 		let canContinue: Bool
-
+		
 		init(state: NumberInput.State) {
 			self.prompt = "Enter a number from \(state.validNumbers.lowerBound) to \(state.validNumbers.upperBound)"
 			self.output = state.output
@@ -43,9 +43,9 @@ struct NumberInputView: View {
 			}
 		}
 	}
-
+	
 	let store: StoreOf<NumberInput>
-
+	
 	var body: some View {
 		WithViewStore(store, observe: ViewState.init(state:)) { viewStore in
 			ScrollView {

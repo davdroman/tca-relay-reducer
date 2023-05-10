@@ -5,17 +5,17 @@ struct QuoteInput: ReducerProtocol {
 	struct State: Hashable {
 		let minimumLength: Int
 		var output: String = ""
-
+		
 		init(minimumLength: Int) {
 			self.minimumLength = minimumLength
 		}
 	}
-
+	
 	enum Action: Equatable {
 		case quoteFieldChanged(String)
 		case continueButtonTapped(output: String)
 	}
-
+	
 	func reduce(into state: inout State, action: Action) -> EffectTask<Action> {
 		switch action {
 		case .quoteFieldChanged(let quote):
@@ -32,16 +32,16 @@ struct QuoteInputView: View {
 		let prompt: String
 		let output: String
 		let canContinue: Bool
-
+		
 		init(state: QuoteInput.State) {
 			self.prompt = "Enter your favorite movie quote\n\n\(state.minimumLength) characters min."
 			self.output = state.output
 			self.canContinue = state.output.count >= state.minimumLength
 		}
 	}
-
+	
 	let store: StoreOf<QuoteInput>
-
+	
 	var body: some View {
 		WithViewStore(store, observe: ViewState.init(state:)) { viewStore in
 			ScrollView {

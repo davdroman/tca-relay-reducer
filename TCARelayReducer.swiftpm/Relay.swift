@@ -55,8 +55,8 @@ public struct Relay<
 
 public extension Store {
 	func relay<RelayedState, MainState, MainAction>() -> Store<MainState, MainAction> where
-		State == RelayState<RelayedState, MainState>,
-		Action == RelayAction<RelayedState, MainAction>
+	State == RelayState<RelayedState, MainState>,
+	Action == RelayAction<RelayedState, MainAction>
 	{
 		self
 			.scope(state: { $0 }, action: { .relay($0.relayedState, $1) })
