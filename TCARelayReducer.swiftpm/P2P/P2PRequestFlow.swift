@@ -7,40 +7,40 @@ import SwiftUI
 struct P2PRequestFlow: ReducerProtocol {
 	struct State: Hashable {
 		let requests: NonEmpty<[P2PRequest]>
-		
+
 		var root: Destinations.State
 		var path = StackState<Destinations.State>()
-		
+
 		var responses: OrderedDictionary<P2PRequest, P2PResponse> = [:]
-		
+
 		init(requestPack: P2PRequestPack) {
 			self.requests = requestPack.requests
 			self.root = .init(for: requestPack.requests.first)
 		}
 	}
-	
+
 	enum Action: Equatable {
 		case root(Destinations.Action)
 		case path(StackAction<Destinations.State, Destinations.Action>)
 		case dismiss
 	}
-	
+
 	struct Destinations: ReducerProtocol {
 		typealias State = RelayState<P2PRequest, MainState>
 		typealias Action = RelayAction<P2PRequest, MainAction>
-		
+
 		enum MainState: Hashable {
 			case nameInput(NameInput.State)
 			case quoteInput(QuoteInput.State)
 			case numberInput(NumberInput.State)
 		}
-		
+
 		enum MainAction: Equatable {
 			case nameInput(NameInput.Action)
 			case quoteInput(QuoteInput.Action)
 			case numberInput(NumberInput.Action)
 		}
-		
+
 		var body: some ReducerProtocolOf<Self> {
 			Relay {
 				Scope(state: /MainState.nameInput, action: /MainAction.nameInput) {
@@ -55,7 +55,7 @@ struct P2PRequestFlow: ReducerProtocol {
 			}
 		}
 	}
-	
+
 	var body: some ReducerProtocolOf<Self> {
 		Scope(state: \.root, action: /Action.root) {
 			Destinations()
@@ -63,7 +63,7 @@ struct P2PRequestFlow: ReducerProtocol {
 		.forEach(\.path, action: /Action.path) {
 			Destinations()
 		}
-		
+
 		Reduce<State, Action> { state, action in
 			switch action {
 			case .path(.popFrom):
@@ -89,7 +89,7 @@ struct P2PRequestFlow: ReducerProtocol {
 			}
 		}
 	}
-	
+
 	func continueEffect(for state: inout State) -> EffectTask<Action> {
 		if let nextRequest = state.requests.first(where: { state.responses[$0] == nil }) {
 			let nextDestination = Destinations.State(for: nextRequest)
@@ -128,9 +128,9 @@ extension P2PRequestFlow.Destinations.State {
 
 struct P2PRequestFlowView: View {
 	@Environment(\.dismiss) private var dismiss
-	
+
 	let store: StoreOf<P2PRequestFlow>
-	
+
 	var body: some View {
 		NavigationStackStore(store.scope(state: \.path, action: { .path($0) })) {
 			view(for: store.scope(state: \.root, action: { .root($0) }))
@@ -146,7 +146,7 @@ struct P2PRequestFlowView: View {
 		}
 		.navigationTransition(.slide)
 	}
-	
+
 	func view(for store: StoreOf<P2PRequestFlow.Destinations>) -> some View {
 		SwitchStore(store.relay()) {
 			CaseLet(
