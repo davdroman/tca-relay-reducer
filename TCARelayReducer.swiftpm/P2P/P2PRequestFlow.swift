@@ -8,8 +8,8 @@ struct P2PRequestFlow: ReducerProtocol {
 	struct State: Hashable {
 		let requests: NonEmpty<[P2PRequest]>
 
-		var root: Destinations.State
-		var path = StackState<Destinations.State>()
+		var root: Path.State
+		var path = StackState<Path.State>()
 
 		var responses: OrderedDictionary<P2PRequest, P2PResponse> = [:]
 
@@ -20,12 +20,12 @@ struct P2PRequestFlow: ReducerProtocol {
 	}
 
 	enum Action: Equatable {
-		case root(Destinations.Action)
-		case path(StackAction<Destinations.State, Destinations.Action>)
+		case root(Path.Action)
+		case path(StackAction<Path.State, Path.Action>)
 		case dismiss
 	}
 
-	struct Destinations: ReducerProtocol {
+	struct Path: ReducerProtocol {
 		typealias State = RelayState<P2PRequest, MainState>
 		typealias Action = RelayAction<P2PRequest, MainAction>
 
@@ -58,10 +58,10 @@ struct P2PRequestFlow: ReducerProtocol {
 
 	var body: some ReducerProtocolOf<Self> {
 		Scope(state: \.root, action: /Action.root) {
-			Destinations()
+			Path()
 		}
 		.forEach(\.path, action: /Action.path) {
-			Destinations()
+			Path()
 		}
 
 		Reduce<State, Action> { state, action in
@@ -92,7 +92,7 @@ struct P2PRequestFlow: ReducerProtocol {
 
 	func continueEffect(for state: inout State) -> EffectTask<Action> {
 		if let nextRequest = state.requests.first(where: { state.responses[$0] == nil }) {
-			let nextDestination = Destinations.State(for: nextRequest)
+			let nextDestination = Path.State(for: nextRequest)
 			if state.path.last != nextDestination {
 				state.path.append(nextDestination)
 			}
@@ -107,7 +107,7 @@ struct P2PRequestFlow: ReducerProtocol {
 	}
 }
 
-extension P2PRequestFlow.Destinations.State {
+extension P2PRequestFlow.Path.State {
 	init(for anyRequest: P2PRequest) {
 		switch anyRequest {
 		case .name(let request):
@@ -147,21 +147,21 @@ struct P2PRequestFlowView: View {
 		.navigationTransition(.slide)
 	}
 
-	func view(for store: StoreOf<P2PRequestFlow.Destinations>) -> some View {
+	func view(for store: StoreOf<P2PRequestFlow.Path>) -> some View {
 		SwitchStore(store.relay()) {
 			CaseLet(
-				state: /P2PRequestFlow.Destinations.MainState.nameInput,
-				action: P2PRequestFlow.Destinations.MainAction.nameInput,
+				state: /P2PRequestFlow.Path.MainState.nameInput,
+				action: P2PRequestFlow.Path.MainAction.nameInput,
 				then: NameInputView.init(store:)
 			)
 			CaseLet(
-				state: /P2PRequestFlow.Destinations.MainState.quoteInput,
-				action: P2PRequestFlow.Destinations.MainAction.quoteInput,
+				state: /P2PRequestFlow.Path.MainState.quoteInput,
+				action: P2PRequestFlow.Path.MainAction.quoteInput,
 				then: QuoteInputView.init(store:)
 			)
 			CaseLet(
-				state: /P2PRequestFlow.Destinations.MainState.numberInput,
-				action: P2PRequestFlow.Destinations.MainAction.numberInput,
+				state: /P2PRequestFlow.Path.MainState.numberInput,
+				action: P2PRequestFlow.Path.MainAction.numberInput,
 				then: NumberInputView.init(store:)
 			)
 		}
