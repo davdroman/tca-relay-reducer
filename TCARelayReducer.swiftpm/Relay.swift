@@ -60,6 +60,6 @@ public extension Store {
 	{
 		self
 			.scope(state: { $0 }, action: { .relay($0.relayedState, $1) })
-			.scope(state: { $0.mainState })
+			.scope(state: { $0.mainState }, action: { $0 })
 	}
 }
