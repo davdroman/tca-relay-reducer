@@ -2,7 +2,7 @@ import ComposableArchitecture
 import SwiftUI
 
 struct NumberInput: ReducerProtocol {
-	struct State: Hashable {
+	struct State: Equatable {
 		let validNumbers: ClosedRange<Int>
 		var output: Int? = nil
 		

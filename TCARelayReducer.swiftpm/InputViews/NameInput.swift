@@ -2,7 +2,7 @@ import ComposableArchitecture
 import SwiftUI
 
 struct NameInput: ReducerProtocol {
-	struct State: Hashable {
+	struct State: Equatable {
 		let validCharacters: CharacterSet
 		var output: String = ""
 

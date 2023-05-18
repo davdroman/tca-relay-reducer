@@ -5,7 +5,7 @@ import OrderedCollections
 import SwiftUI
 
 struct P2PRequestFlow: ReducerProtocol {
-	struct State: Hashable {
+	struct State: Equatable {
 		let requests: NonEmpty<[P2PRequest]>
 
 		var root: Path.State
@@ -29,7 +29,7 @@ struct P2PRequestFlow: ReducerProtocol {
 		typealias State = RelayState<P2PRequest, MainState>
 		typealias Action = RelayAction<P2PRequest, MainAction>
 
-		enum MainState: Hashable {
+		enum MainState: Equatable {
 			case nameInput(NameInput.State)
 			case quoteInput(QuoteInput.State)
 			case numberInput(NumberInput.State)

@@ -2,7 +2,7 @@ import ComposableArchitecture
 import SwiftUI
 
 struct Main: ReducerProtocol {
-	struct State: Hashable {
+	struct State: Equatable {
 		@PresentationState
 		var p2pRequestFlow: P2PRequestFlow.State?
 	}

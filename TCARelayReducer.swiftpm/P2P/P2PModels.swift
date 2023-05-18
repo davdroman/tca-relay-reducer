@@ -3,7 +3,7 @@ import NonEmpty
 
 // MARK: Requests
 
-struct P2PRequestPack: Hashable {
+struct P2PRequestPack: Equatable {
 	var requests: NonEmpty<[P2PRequest]>
 }
 
@@ -47,27 +47,27 @@ struct P2PMetadata: Hashable {
 
 // MARK: Responses
 
-struct P2PResponsePack: Hashable {
+struct P2PResponsePack: Equatable {
 	var responses: [P2PResponse]
 }
 
-enum P2PResponse: Hashable {
+enum P2PResponse: Equatable {
 	case name(P2PNameResponse)
 	case quote(P2PQuoteResponse)
 	case number(P2PNumberResponse)
 }
 
-struct P2PNameResponse: Hashable {
+struct P2PNameResponse: Equatable {
 	let id: UUID // NameInput shouldn't care about this ID, it's for P2P only.
 	let name: String // NameInput outputs this!
 }
 
-struct P2PQuoteResponse: Hashable {
+struct P2PQuoteResponse: Equatable {
 	let id: UUID // QuoteInput shouldn't care about this ID, it's for P2P only.
 	let quote: String // QuoteInput outputs this!
 }
 
-struct P2PNumberResponse: Hashable {
+struct P2PNumberResponse: Equatable {
 	let id: UUID // NumberInput shouldn't care about this ID, it's for P2P only.
 	let number: Int // NumberInput outputs this!
 }

@@ -2,7 +2,7 @@ import ComposableArchitecture
 import SwiftUI
 
 struct QuoteInput: ReducerProtocol {
-	struct State: Hashable {
+	struct State: Equatable {
 		let minimumLength: Int
 		var output: String = ""
 		
