@@ -50,8 +50,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/davdroman/swift-composable-architecture",
       "state" : {
-        "branch" : "navigation-beta-full-scope-2",
-        "revision" : "ced9a09f67cdca52f24aba48451e4716afc474b4"
+        "branch" : "navigation-beta-full-scope-3",
+        "revision" : "04bf5fe59a4347566f4d07331a5624e9f1a2d64b"
       }
     },
     {
@@ -59,8 +59,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/pointfreeco/swift-custom-dump",
       "state" : {
-        "revision" : "84b30e1af72e0ffe6dfbfe39d53b8173caacf224",
-        "version" : "0.10.2"
+        "revision" : "505aa98716275fbd045d8f934fee3337c82ffbd3",
+        "version" : "0.10.3"
       }
     },
     {
@@ -68,8 +68,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/pointfreeco/swift-dependencies",
       "state" : {
-        "revision" : "ad0a6a0dd4d4741263e798f4f5029589c9b5da73",
-        "version" : "0.4.2"
+        "revision" : "25c9b6789b4b7ada649a3808e6d8de1489082a33",
+        "version" : "0.5.0"
       }
     },
     {
