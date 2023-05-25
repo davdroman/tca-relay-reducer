@@ -34,7 +34,7 @@ let package = Package(
         )
     ],
     dependencies: [
-        .package(url: "https://github.com/davdroman/swift-composable-architecture", .branch("navigation-beta-full-scope-4")),
+        .package(url: "https://github.com/davdroman/swift-composable-architecture", .branch("navigation-beta-full-scope-5")),
         .package(url: "https://github.com/davdroman/swiftui-navigation-transitions", "0.7.2"..<"1.0.0"),
         .package(url: "https://github.com/apple/swift-async-algorithms", "0.0.4"..<"1.0.0"),
         .package(url: "https://github.com/pointfreeco/swift-nonempty", "0.4.0"..<"1.0.0"),

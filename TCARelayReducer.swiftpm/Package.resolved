@@ -50,8 +50,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/davdroman/swift-composable-architecture",
       "state" : {
-        "branch" : "navigation-beta-full-scope-4",
-        "revision" : "a0e3fd0be3a56300e12f2ea08d9105c93e397ec5"
+        "branch" : "navigation-beta-full-scope-5",
+        "revision" : "91a4b253ed8bb158f18fca9d95d8ff1261c45c96"
       }
     },
     {
