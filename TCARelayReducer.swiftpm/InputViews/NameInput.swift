@@ -36,7 +36,7 @@ struct NameInputView: View {
 		init(state: NameInput.State) {
 			self.prompt = "Enter your name (letters only)"
 			self.output = state.output
-			self.canContinue = state.output.rangeOfCharacter(from: state.validCharacters) == state.output.startIndex..<state.output.endIndex
+			self.canContinue = CharacterSet(charactersIn: state.output).isSubset(of: state.validCharacters)
 		}
 	}
 
@@ -62,6 +62,7 @@ struct NameInputView: View {
 						.frame(height: 40)
 				}
 				.buttonStyle(.borderedProminent)
+                .disabled(!viewStore.canContinue)
 			}
 			.padding()
 		}

@@ -64,6 +64,7 @@ struct QuoteInputView: View {
 						.frame(height: 40)
 				}
 				.buttonStyle(.borderedProminent)
+                .disabled(!viewStore.canContinue)
 			}
 			.padding()
 		}
