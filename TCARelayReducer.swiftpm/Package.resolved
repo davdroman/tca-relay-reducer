@@ -95,8 +95,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/siteline/SwiftUI-Introspect",
       "state" : {
-        "revision" : "5b3f3996c7a2a84d5f4ba0e03cd7d584154778f2",
-        "version" : "0.3.1"
+        "revision" : "8bf15ad33a529359200bd419a72ca2dda841089b",
+        "version" : "0.8.0"
       }
     },
     {
@@ -113,8 +113,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/davdroman/swiftui-navigation-transitions",
       "state" : {
-        "revision" : "df1c4e432c5e584cd6d6849c069d3df9ca7e86d8",
-        "version" : "0.9.0"
+        "revision" : "dfb0597c6ca2679615f34c9260ebef16af93397b",
+        "version" : "0.10.0"
       }
     },
     {
