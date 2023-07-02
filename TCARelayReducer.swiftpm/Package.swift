@@ -17,6 +17,7 @@ let package = Package(
             name: "TCARelayReducer",
             targets: ["AppModule"],
             bundleIdentifier: "mn.dro.TCARelayReducer",
+            teamIdentifier: "26CPNYHDUU",
             displayVersion: "1.0",
             bundleVersion: "1",
             appIcon: .placeholder(icon: .leaf),
@@ -34,7 +35,7 @@ let package = Package(
         )
     ],
     dependencies: [
-        .package(url: "https://github.com/davdroman/swift-composable-architecture", branch: "store-scope-local-state-action"),
+        .package(url: "https://github.com/davdroman/swift-composable-architecture", .branch("store-scope-local-state-action")),
         .package(url: "https://github.com/davdroman/swiftui-navigation-transitions", "0.10.1"..<"1.0.0"),
         .package(url: "https://github.com/apple/swift-async-algorithms", "0.0.4"..<"1.0.0"),
         .package(url: "https://github.com/pointfreeco/swift-nonempty", "0.4.0"..<"1.0.0"),
