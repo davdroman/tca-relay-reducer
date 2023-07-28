@@ -69,7 +69,7 @@ struct MainView: View {
 			content: P2PRequestFlowView.init(store:)
 		)
 		.task {
-			await ViewStore(store).send(.task).finish()
+			await store.send(.task).finish()
 		}
 	}
 }
