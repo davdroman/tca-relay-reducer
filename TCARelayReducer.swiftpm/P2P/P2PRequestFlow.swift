@@ -148,22 +148,27 @@ struct P2PRequestFlowView: View {
 	}
 
 	func view(for store: StoreOf<P2PRequestFlow.Path>) -> some View {
-		SwitchStore(store.relay()) {
-			CaseLet(
-				state: /P2PRequestFlow.Path.MainState.nameInput,
-				action: P2PRequestFlow.Path.MainAction.nameInput,
-				then: NameInputView.init(store:)
-			)
-			CaseLet(
-				state: /P2PRequestFlow.Path.MainState.quoteInput,
-				action: P2PRequestFlow.Path.MainAction.quoteInput,
-				then: QuoteInputView.init(store:)
-			)
-			CaseLet(
-				state: /P2PRequestFlow.Path.MainState.numberInput,
-				action: P2PRequestFlow.Path.MainAction.numberInput,
-				then: NumberInputView.init(store:)
-			)
+		SwitchStore(store.relay()) { state in
+			switch state {
+			case .nameInput:
+				CaseLet(
+					/P2PRequestFlow.Path.MainState.nameInput,
+					action: P2PRequestFlow.Path.MainAction.nameInput,
+					then: NameInputView.init(store:)
+				)
+			case .quoteInput:
+				CaseLet(
+					/P2PRequestFlow.Path.MainState.quoteInput,
+					action: P2PRequestFlow.Path.MainAction.quoteInput,
+					then: QuoteInputView.init(store:)
+				)
+			case .numberInput:
+				CaseLet(
+					/P2PRequestFlow.Path.MainState.numberInput,
+					action: P2PRequestFlow.Path.MainAction.numberInput,
+					then: NumberInputView.init(store:)
+				)
+			}
 		}
 	}
 }
