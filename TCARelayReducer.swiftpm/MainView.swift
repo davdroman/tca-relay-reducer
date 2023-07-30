@@ -1,7 +1,7 @@
 import ComposableArchitecture
 import SwiftUI
 
-struct Main: ReducerProtocol {
+struct Main: Reducer {
 	struct State: Equatable {
 		@PresentationState
 		var p2pRequestFlow: P2PRequestFlow.State?
@@ -15,7 +15,7 @@ struct Main: ReducerProtocol {
 
 	@Dependency(\.p2pClient) var p2pClient
 
-	var body: some ReducerProtocolOf<Self> {
+	var body: some ReducerOf<Self> {
 		Reduce<State, Action> { state, action in
 			switch action {
 			case .task:

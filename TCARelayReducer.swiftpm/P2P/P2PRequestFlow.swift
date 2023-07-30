@@ -4,7 +4,7 @@ import NonEmpty
 import OrderedCollections
 import SwiftUI
 
-struct P2PRequestFlow: ReducerProtocol {
+struct P2PRequestFlow: Reducer {
 	struct State: Equatable {
 		let requests: NonEmpty<[P2PRequest]>
 
@@ -25,7 +25,7 @@ struct P2PRequestFlow: ReducerProtocol {
 		case dismiss
 	}
 
-	struct Path: ReducerProtocol {
+	struct Path: Reducer {
 		typealias State = RelayState<P2PRequest, MainState>
 		typealias Action = RelayAction<P2PRequest, MainAction>
 
@@ -41,7 +41,7 @@ struct P2PRequestFlow: ReducerProtocol {
 			case numberInput(NumberInput.Action)
 		}
 
-		var body: some ReducerProtocolOf<Self> {
+		var body: some ReducerOf<Self> {
 			Relay {
 				Scope(state: /MainState.nameInput, action: /MainAction.nameInput) {
 					NameInput()
@@ -56,7 +56,7 @@ struct P2PRequestFlow: ReducerProtocol {
 		}
 	}
 
-	var body: some ReducerProtocolOf<Self> {
+	var body: some ReducerOf<Self> {
 		Scope(state: \.root, action: /Action.root) {
 			Path()
 		}
@@ -90,7 +90,7 @@ struct P2PRequestFlow: ReducerProtocol {
 		}
 	}
 
-	func continueEffect(for state: inout State) -> EffectTask<Action> {
+	func continueEffect(for state: inout State) -> Effect<Action> {
 		if let nextRequest = state.requests.first(where: { state.responses[$0] == nil }) {
 			let nextDestination = Path.State(for: nextRequest)
 			if state.path.last != nextDestination {

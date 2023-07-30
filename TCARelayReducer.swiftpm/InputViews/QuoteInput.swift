@@ -1,7 +1,7 @@
 import ComposableArchitecture
 import SwiftUI
 
-struct QuoteInput: ReducerProtocol {
+struct QuoteInput: Reducer {
 	struct State: Equatable {
 		let minimumLength: Int
 		var output: String = ""
@@ -16,7 +16,7 @@ struct QuoteInput: ReducerProtocol {
 		case continueButtonTapped(output: String)
 	}
 	
-	func reduce(into state: inout State, action: Action) -> EffectTask<Action> {
+	func reduce(into state: inout State, action: Action) -> Effect<Action> {
 		switch action {
 		case .quoteFieldChanged(let quote):
 			state.output = quote
@@ -75,10 +75,9 @@ struct QuoteInputView: View {
 struct QuoteInputView_Previews: PreviewProvider {
 	static var previews: some View {
 		QuoteInputView(
-			store: .init(
-				initialState: .init(minimumLength: 10),
-				reducer: QuoteInput()
-			)
+			store: Store(initialState: .init(minimumLength: 10)) {
+				QuoteInput()
+			}
 		)
 	}
 }

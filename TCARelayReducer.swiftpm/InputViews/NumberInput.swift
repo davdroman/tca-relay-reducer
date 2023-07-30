@@ -1,7 +1,7 @@
 import ComposableArchitecture
 import SwiftUI
 
-struct NumberInput: ReducerProtocol {
+struct NumberInput: Reducer {
 	struct State: Equatable {
 		let validNumbers: ClosedRange<Int>
 		var output: Int? = nil
@@ -16,7 +16,7 @@ struct NumberInput: ReducerProtocol {
 		case continueButtonTapped(output: Int)
 	}
 	
-	func reduce(into state: inout State, action: Action) -> EffectTask<Action> {
+	func reduce(into state: inout State, action: Action) -> Effect<Action> {
 		switch action {
 		case .numberFieldChanged(let number):
 			state.output = number
@@ -78,10 +78,9 @@ struct NumberInputView: View {
 struct NumberInputView_Previews: PreviewProvider {
 	static var previews: some View {
 		NumberInputView(
-			store: .init(
-				initialState: .init(validNumbers: 1...5),
-				reducer: NumberInput()
-			)
+			store: Store(initialState: .init(validNumbers: 1...5)) {
+				NumberInput()
+			}
 		)
 	}
 }

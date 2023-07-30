@@ -1,7 +1,7 @@
 import ComposableArchitecture
 import SwiftUI
 
-struct NameInput: ReducerProtocol {
+struct NameInput: Reducer {
 	struct State: Equatable {
 		let validCharacters: CharacterSet
 		var output: String = ""
@@ -16,7 +16,7 @@ struct NameInput: ReducerProtocol {
 		case continueButtonTapped(output: String)
 	}
 
-	func reduce(into state: inout State, action: Action) -> EffectTask<Action> {
+	func reduce(into state: inout State, action: Action) -> Effect<Action> {
 		switch action {
 		case .nameFieldChanged(let name):
 			state.output = name
@@ -73,10 +73,9 @@ struct NameInputView: View {
 struct NameInputView_Previews: PreviewProvider {
 	static var previews: some View {
 		NameInputView(
-			store: .init(
-				initialState: .init(validCharacters: .letters),
-				reducer: NameInput()
-			)
+			store: Store(initialState: .init(validCharacters: .letters)) {
+				NameInput()
+			}
 		)
 	}
 }

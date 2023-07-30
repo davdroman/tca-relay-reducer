@@ -31,7 +31,7 @@ public struct Relay<
 	MainState,
 	MainAction,
 	MainReducer
->: ReducerProtocol where MainReducer: ReducerProtocol<MainState, MainAction> {
+>: Reducer where MainReducer: Reducer<MainState, MainAction> {
 	public typealias State = RelayState<RelayedState, MainState>
 	public typealias Action = RelayAction<RelayedState, MainAction>
 
@@ -43,7 +43,7 @@ public struct Relay<
 		self.mainReducer = mainReducer()
 	}
 
-	public func reduce(into state: inout State, action: Action) -> EffectTask<Action> {
+	public func reduce(into state: inout State, action: Action) -> Effect<Action> {
 		switch action {
 		case let .relay(relayedState, mainAction):
 			return mainReducer.reduce(into: &state.mainState, action: mainAction).map {
