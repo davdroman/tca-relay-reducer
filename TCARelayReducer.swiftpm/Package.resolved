@@ -51,7 +51,7 @@
       "location" : "https://github.com/davdroman/swift-composable-architecture",
       "state" : {
         "branch" : "store-scope-local-state-action",
-        "revision" : "a94c146d0039c8602ec5773bc91a2df8f82bb233"
+        "revision" : "c0fe5dfaa3852c05a4238e1c51ec2d26ae3af66c"
       }
     },
     {
