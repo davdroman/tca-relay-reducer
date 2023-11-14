@@ -66,14 +66,14 @@ struct P2PRequestFlow: Reducer {
 	}
 
 	var body: some ReducerOf<Self> {
-		Scope(state: \.root, action: /Action.root) {
+		Scope(state: \.root, action: \.root) {
 			Path()
 		}
-		.forEach(\.path, action: /Action.path) {
+		.forEach(\.path, action: \.path) {
 			Path()
 		}
 
-		Reduce<State, Action> { state, action in
+		Reduce { state, action in
 			switch action {
 			case .path(.popFrom):
 				state.responses.removeLast()
@@ -144,8 +144,8 @@ struct P2PRequestFlowView: View {
 	let store: StoreOf<P2PRequestFlow>
 
 	var body: some View {
-		NavigationStackStore(store.scope(state: \.path, action: { .path($0) })) {
-			view(for: store.scope(state: \.root, action: { .root($0) }))
+		NavigationStackStore(store.scope(state: \.path, action: \.path)) {
+			view(for: store.scope(state: \.root, action: \.root))
 				.toolbar {
 					ToolbarItem(placement: .navigationBarLeading) {
 						Button(action: { dismiss() }) {

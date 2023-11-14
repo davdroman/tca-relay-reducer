@@ -1,7 +1,8 @@
 import ComposableArchitecture
 import SwiftUI
 
-struct NameInput: Reducer {
+@Reducer
+struct NameInput {
 	struct State: Equatable {
 		let validCharacters: CharacterSet
 		var output: String = ""
@@ -11,7 +12,7 @@ struct NameInput: Reducer {
 		}
 	}
 
-	enum Action: Equatable {
+	enum Action {
 		case nameFieldChanged(String)
 		case continueButtonTapped(output: String)
 	}
