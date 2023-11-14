@@ -1,7 +1,8 @@
 import ComposableArchitecture
 import SwiftUI
 
-struct QuoteInput: Reducer {
+@Reducer
+struct QuoteInput {
 	struct State: Equatable {
 		let minimumLength: Int
 		var output: String = ""
@@ -11,7 +12,7 @@ struct QuoteInput: Reducer {
 		}
 	}
 	
-	enum Action: Equatable {
+	enum Action {
 		case quoteFieldChanged(String)
 		case continueButtonTapped(output: String)
 	}

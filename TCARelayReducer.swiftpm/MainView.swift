@@ -1,13 +1,14 @@
 import ComposableArchitecture
 import SwiftUI
 
-struct Main: Reducer {
+@Reducer
+struct Main {
 	struct State: Equatable {
 		@PresentationState
 		var p2pRequestFlow: P2PRequestFlow.State?
 	}
 
-	enum Action: Equatable {
+	enum Action {
 		case task
 		case p2pRequestReceived(P2PRequestPack)
 		case p2pRequestFlow(PresentationAction<P2PRequestFlow.Action>)
@@ -16,7 +17,7 @@ struct Main: Reducer {
 	@Dependency(\.p2pClient) var p2pClient
 
 	var body: some ReducerOf<Self> {
-		Reduce<State, Action> { state, action in
+		Reduce { state, action in
 			switch action {
 			case .task:
 				return .run { send in
@@ -37,7 +38,7 @@ struct Main: Reducer {
 				return .none
 			}
 		}
-		.ifLet(\.$p2pRequestFlow, action: /Action.p2pRequestFlow) {
+		.ifLet(\.$p2pRequestFlow, action: \.p2pRequestFlow) {
 			P2PRequestFlow()
 		}
 	}
@@ -61,13 +62,9 @@ struct MainView: View {
 				}
 			}
 		}
-		.sheet(
-			store: store.scope(
-				state: \.$p2pRequestFlow,
-				action: { .p2pRequestFlow($0) }
-			),
-			content: P2PRequestFlowView.init(store:)
-		)
+		.sheet(store: store.scope(state: \.$p2pRequestFlow, action: \.p2pRequestFlow)) {
+			P2PRequestFlowView(store: $0)
+		}
 		.task {
 			await store.send(.task).finish()
 		}

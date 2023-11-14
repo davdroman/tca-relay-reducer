@@ -1,7 +1,8 @@
 import ComposableArchitecture
 import SwiftUI
 
-struct NumberInput: Reducer {
+@Reducer
+struct NumberInput {
 	struct State: Equatable {
 		let validNumbers: ClosedRange<Int>
 		var output: Int? = nil
@@ -11,7 +12,7 @@ struct NumberInput: Reducer {
 		}
 	}
 	
-	enum Action: Equatable {
+	enum Action {
 		case numberFieldChanged(Int?)
 		case continueButtonTapped(output: Int)
 	}

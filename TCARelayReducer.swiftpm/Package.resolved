@@ -48,10 +48,10 @@
     {
       "identity" : "swift-composable-architecture",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/davdroman/swift-composable-architecture",
+      "location" : "https://github.com/pointfreeco/swift-composable-architecture",
       "state" : {
-        "branch" : "store-scope-local-state-action",
-        "revision" : "199f3c7ecbd2567731a5221986fa40abfd482585"
+        "branch" : "store-tree",
+        "revision" : "43e489a812443c07833a49d5cf8b9b3e726e4cb8"
       }
     },
     {
