@@ -11,6 +11,17 @@ struct P2PRequestFlow: Reducer {
 		var root: Path.State
 		var path = StackState<Path.State>()
 
+		var currentRequest: P2PRequest {
+			switch path.last ?? root {
+			case .nameInput:
+				return requests.first(where: { $0.is(\.name) })!
+			case .quoteInput:
+				return requests.first(where: { $0.is(\.quote) })!
+			case .numberInput:
+				return requests.first(where: { $0.is(\.number) })!
+			}
+		}
+
 		var responses: OrderedDictionary<P2PRequest, P2PResponse> = [:]
 
 		init(requestPack: P2PRequestPack) {
@@ -19,39 +30,37 @@ struct P2PRequestFlow: Reducer {
 		}
 	}
 
-	enum Action: Equatable {
+	@CasePathable
+	enum Action {
 		case root(Path.Action)
 		case path(StackAction<Path.State, Path.Action>)
 		case dismiss
 	}
 
 	struct Path: Reducer {
-		typealias State = RelayState<P2PRequest, MainState>
-		typealias Action = RelayAction<P2PRequest, MainAction>
-
-		enum MainState: Equatable {
+		@CasePathable
+		enum State: Equatable {
 			case nameInput(NameInput.State)
 			case quoteInput(QuoteInput.State)
 			case numberInput(NumberInput.State)
 		}
 
-		enum MainAction: Equatable {
+		@CasePathable
+		enum Action {
 			case nameInput(NameInput.Action)
 			case quoteInput(QuoteInput.Action)
 			case numberInput(NumberInput.Action)
 		}
 
 		var body: some ReducerOf<Self> {
-			Relay {
-				Scope(state: /MainState.nameInput, action: /MainAction.nameInput) {
-					NameInput()
-				}
-				Scope(state: /MainState.quoteInput, action: /MainAction.quoteInput) {
-					QuoteInput()
-				}
-				Scope(state: /MainState.numberInput, action: /MainAction.numberInput) {
-					NumberInput()
-				}
+			Scope(state: \.nameInput, action: \.nameInput) {
+				NameInput()
+			}
+			Scope(state: \.quoteInput, action: \.quoteInput) {
+				QuoteInput()
+			}
+			Scope(state: \.numberInput, action: \.numberInput) {
+				NumberInput()
 			}
 		}
 	}
@@ -70,18 +79,21 @@ struct P2PRequestFlow: Reducer {
 				state.responses.removeLast()
 				return .none
 			case
-				let .root(.relay(request, .nameInput(.continueButtonTapped(output: name)))),
-				let .path(.element(_, .relay(request, .nameInput(.continueButtonTapped(output: name))))):
+				let .root(.nameInput(.continueButtonTapped(output: name))),
+				let .path(.element(_, .nameInput(.continueButtonTapped(output: name)))):
+				let request = state.currentRequest
 				state.responses[request] = .name(.init(id: request.id, name: name))
 				return continueEffect(for: &state)
 			case
-				let .root(.relay(request, .quoteInput(.continueButtonTapped(output: quote)))),
-				let .path(.element(_, .relay(request, .quoteInput(.continueButtonTapped(output: quote))))):
+				let .root(.quoteInput(.continueButtonTapped(output: quote))),
+				let .path(.element(_, .quoteInput(.continueButtonTapped(output: quote)))):
+				let request = state.currentRequest
 				state.responses[request] = .quote(.init(id: request.id, quote: quote))
 				return continueEffect(for: &state)
 			case
-				let .root(.relay(request, .numberInput(.continueButtonTapped(output: number)))),
-				let .path(.element(_, .relay(request, .numberInput(.continueButtonTapped(output: number))))):
+				let .root(.numberInput(.continueButtonTapped(output: number))),
+				let .path(.element(_, .numberInput(.continueButtonTapped(output: number)))):
+				let request = state.currentRequest
 				state.responses[request] = .number(.init(id: request.id, number: number))
 				return continueEffect(for: &state)
 			default:
@@ -111,17 +123,17 @@ extension P2PRequestFlow.Path.State {
 	init(for anyRequest: P2PRequest) {
 		switch anyRequest {
 		case .name(let request):
-			self = .relayed(anyRequest, with: .nameInput(.init(
+			self = .nameInput(.init(
 				validCharacters: request.validCharacters
-			)))
+			))
 		case .quote(let request):
-			self = .relayed(anyRequest, with: .quoteInput(.init(
+			self = .quoteInput(.init(
 				minimumLength: request.minimumLength
-			)))
+			))
 		case .number(let request):
-			self = .relayed(anyRequest, with: .numberInput(.init(
+			self = .numberInput(.init(
 				validNumbers: request.validNumbers
-			)))
+			))
 		}
 	}
 }
@@ -148,24 +160,24 @@ struct P2PRequestFlowView: View {
 	}
 
 	func view(for store: StoreOf<P2PRequestFlow.Path>) -> some View {
-		SwitchStore(store.relay()) { state in
+		SwitchStore(store) { state in
 			switch state {
 			case .nameInput:
 				CaseLet(
-					/P2PRequestFlow.Path.MainState.nameInput,
-					action: P2PRequestFlow.Path.MainAction.nameInput,
+					/P2PRequestFlow.Path.State.nameInput,
+					action: P2PRequestFlow.Path.Action.nameInput,
 					then: NameInputView.init(store:)
 				)
 			case .quoteInput:
 				CaseLet(
-					/P2PRequestFlow.Path.MainState.quoteInput,
-					action: P2PRequestFlow.Path.MainAction.quoteInput,
+					/P2PRequestFlow.Path.State.quoteInput,
+					action: P2PRequestFlow.Path.Action.quoteInput,
 					then: QuoteInputView.init(store:)
 				)
 			case .numberInput:
 				CaseLet(
-					/P2PRequestFlow.Path.MainState.numberInput,
-					action: P2PRequestFlow.Path.MainAction.numberInput,
+					/P2PRequestFlow.Path.State.numberInput,
+					action: P2PRequestFlow.Path.Action.numberInput,
 					then: NumberInputView.init(store:)
 				)
 			}

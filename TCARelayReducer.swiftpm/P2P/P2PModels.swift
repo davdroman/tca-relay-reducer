@@ -1,3 +1,4 @@
+import CasePaths
 import Foundation
 import NonEmpty
 
@@ -7,6 +8,7 @@ struct P2PRequestPack: Equatable {
 	var requests: NonEmpty<[P2PRequest]>
 }
 
+@CasePathable
 enum P2PRequest: Hashable {
 	case name(P2PNameRequest)
 	case quote(P2PQuoteRequest)

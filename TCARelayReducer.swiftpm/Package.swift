@@ -35,7 +35,7 @@ let package = Package(
         )
     ],
     dependencies: [
-        .package(url: "https://github.com/davdroman/swift-composable-architecture", .branch("store-scope-local-state-action")),
+        .package(url: "https://github.com/pointfreeco/swift-composable-architecture", .branch("store-tree")),
         .package(url: "https://github.com/davdroman/swiftui-navigation-transitions", "0.13.0"..<"1.0.0"),
         .package(url: "https://github.com/apple/swift-async-algorithms", "0.0.4"..<"1.0.0"),
         .package(url: "https://github.com/pointfreeco/swift-nonempty", "0.4.0"..<"1.0.0"),
